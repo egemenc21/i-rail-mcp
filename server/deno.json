@@ -1,13 +1,13 @@
 {
   "tasks": {
     "dev": "deno run --watch main.ts",
-    "test": "deno test",
+    "test": "deno test --env-file=.env -A tests/stations.ts",
     "start": "deno run --env-file=.env -A main.ts"
   },
   "imports": {
     "@modelcontextprotocol/sdk": "npm:@modelcontextprotocol/sdk@^1.10.2",
     "@std/assert": "jsr:@std/assert@1",
     "zod": "npm:zod@^3.24.3",
-    "axios": "npm:axios@^1.8.4"
+    "axios": "npm:axios@^1.9.0"
   }
 }
