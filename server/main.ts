@@ -16,7 +16,7 @@ function getServer() {
     {
       lang: z.string().length(2).describe("Two-letter lang code (e.g. en, fr)"),
     },
-    async ({lang}) => {
+    async ({ lang }) => {
       const response = await getStationInfo(lang);
       return response.data;
     },
@@ -24,7 +24,6 @@ function getServer() {
 
   return server;
 }
-
 
 async function startServer() {
   try {
