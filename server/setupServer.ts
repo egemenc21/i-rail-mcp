@@ -1,4 +1,4 @@
-import { McpServer } from "@modelcontextprotocol/sdk";
+import { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
 import registerStationTools from "./tools/stations.ts";
 
 export function getServer() {
