@@ -1,5 +1,6 @@
 import { getStationInfo, getStationInfoById, getStationInfoByStationName } from "../services/stations.ts";
 import { Station } from "../interfaces/stations.ts";
+import { assertEquals } from "https://deno.land/std@0.208.0/assert/mod.ts";
 
 // Test to get all stations and filter for Belgian ones
 Deno.test("Get all stations and find Belgian ones", async () => {
@@ -11,7 +12,7 @@ Deno.test("Get all stations and find Belgian ones", async () => {
     
     // A basic heuristic to identify Belgian stations - this is an example approach
     // Belgian stations often have BE in the ID or have specific naming patterns
-    const belgianStations = stationData.station.filter((station: Station) => 
+    const stations = stationData.station.filter((station: Station) => 
       station.name.includes("Bruxelles") ||
       station.name.includes("Brussel") ||
       station.name.includes("Liège") ||
@@ -20,13 +21,14 @@ Deno.test("Get all stations and find Belgian ones", async () => {
       station.name.includes("Charleroi")
     );
     
-    console.log(`Identified Belgian stations: ${belgianStations.length}`);
-    console.log("Sample Belgian stations:");
-    belgianStations.slice(0, 5).forEach((station: Station) => {
+    console.log(`Identified stations: ${stations.length}`);
+    console.log("Sample stations:");
+    stations.slice(0, 5).forEach((station: Station) => {
       console.log(`- ${station.name} (ID: ${station["@id"]})`);
     });
-  } catch (error) {
-    console.error("Error fetching stations:", error);
+  } catch (error: unknown) {
+    const errorMessage = error instanceof Error ? error.message : String(error);
+    console.error("Error fetching stations:", errorMessage);
   }
 });
 
@@ -36,14 +38,18 @@ Deno.test("Get station by ID", async () => {
   
   try {
     // Examples of Belgian station IDs - replace with actual IDs if known
-    const stationIds = ["http://irail.be/stations/NMBS/008863156", "http://irail.be/stations/NMBS/008871308"];
+    const stationId = "http://irail.be/stations/NMBS/008813003"; // Brussels-Central
     
-    for (const id of stationIds) {
-      const station = await getStationInfoById(id, "en");
-      console.log(`Station with ID ${id}:`, station ? station.name : "Not found");
+    const station = await getStationInfoById(stationId, "en");
+    if (station) {
+      assertEquals(station.name, "Brussels-Central", `Station with ID ${stationId} should have the correct name`);
+      console.log(`Station with ID ${stationId} has the correct name: ok`);
+    } else {
+      console.log(`Station with ID ${stationId} not found`);
     }
-  } catch (error) {
-    console.error("Error fetching station by ID:", error);
+  } catch (error: unknown) {
+    const errorMessage = error instanceof Error ? error.message : String(error);
+    console.error("Error fetching station by ID:", errorMessage);
   }
 });
 
@@ -52,18 +58,22 @@ Deno.test("Get station by name", async () => {
   console.log("Testing getStationInfoByStationName...");
   
   try {
-    // Examples of Belgian station names - replace with actual names if known
-    const stationNames = ["Bruxelles-Central", "Antwerpen-Centraal"];
-    
-    for (const name of stationNames) {
-      try {
-        const station = await getStationInfoByStationName(name, "en");
-        console.log(`Station with name ${name}:`, station ? `${station.name} (ID: ${station["@id"]})` : "Not found");
-      } catch (error) {
-        console.log(`Station with name ${name} not found`);
+    // Use only Brussels-Central and check for specific ID
+    const name = "Brussels-Central";
+    try {
+      const station = await getStationInfoByStationName(name, "en");
+      if (station) {
+        assertEquals(station["@id"], "http://irail.be/stations/NMBS/008813003", `Station ${name} should have the correct ID`);
+        console.log(`Station ${name} has the correct ID: ok`);
+      } else {
+        console.log("Station not found");
       }
+    } catch (error: unknown) {
+      const errorMessage = error instanceof Error ? error.message : String(error);
+      console.log(`Station with name ${name} not found: ${errorMessage}`);
     }
-  } catch (error) {
-    console.error("Error fetching station by name:", error);
+  } catch (error: unknown) {
+    const errorMessage = error instanceof Error ? error.message : String(error);
+    console.error("Error fetching station by name:", errorMessage);
   }
 });

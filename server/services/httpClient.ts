@@ -2,7 +2,6 @@ import axios from "axios";
 
 const API_URL = Deno.env.get("API_URL");
 
-console.log(API_URL);
 const httpClient = axios.create({
   baseURL: API_URL,
   headers: {
