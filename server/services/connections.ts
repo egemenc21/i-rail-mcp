@@ -1,4 +1,4 @@
-import { Connection, ConnectionsResponse } from "../interfaces/connections.ts";
+import { Connection, ConnectionsResponse, Via } from "../interfaces/connections.ts";
 import httpClient from "./httpClient.ts";
 
 // Type definition for our cleaner response format
@@ -30,7 +30,37 @@ export interface SimpleConnection {
     direction: string;
   }[];
   transfers: number;
+  transferStops: TransferStop[];
   occupancy?: string;
+}
+
+export interface TransferStop {
+  station: string;
+  arrival: {
+    time: string;
+    formattedTime: string;
+    platform: string;
+    delay: number;
+    train: {
+      number: string;
+      type: string;
+    }
+  };
+  departure: {
+    time: string;
+    formattedTime: string;
+    platform: string;
+    delay: number;
+    train: {
+      number: string;
+      type: string;
+      direction: string;
+    }
+  };
+  waitTime: {
+    minutes: number;
+    formatted: string;
+  };
 }
 
 export async function getConnections(
@@ -72,13 +102,55 @@ export async function getConnections(
       direction: conn.departure.direction?.name || '',
     }];
     
-    // Add trains from vias
+    // Process transfer stops if there are vias
+    const transferStops: TransferStop[] = [];
     if (conn.vias && parseInt(conn.vias.number) > 0) {
-      conn.vias.via.forEach(via => {
+      conn.vias.via.forEach((via: Via) => {
+        // Add train to trains array
         trains.push({
           number: via.departure.vehicleinfo.shortname,
           type: via.departure.vehicleinfo.type,
           direction: via.departure.direction?.name || '',
+        });
+        
+        // Calculate wait time at transfer station in minutes
+        const arrivalTime = parseInt(via.arrival.time);
+        const departureTime = parseInt(via.departure.time);
+        const waitMinutes = (departureTime - arrivalTime) / 60;
+        
+        // Format wait time
+        const waitHours = Math.floor(waitMinutes / 60);
+        const waitMins = Math.floor(waitMinutes % 60);
+        const formattedWaitTime = `${waitHours > 0 ? waitHours + 'h ' : ''}${waitMins}min`;
+        
+        // Add transfer stop information
+        transferStops.push({
+          station: via.station,
+          arrival: {
+            time: via.arrival.time,
+            formattedTime: formatTime(via.arrival.time),
+            platform: via.arrival.platform,
+            delay: parseInt(via.arrival.delay) / 60,
+            train: {
+              number: via.arrival.vehicleinfo.shortname,
+              type: via.arrival.vehicleinfo.type,
+            }
+          },
+          departure: {
+            time: via.departure.time,
+            formattedTime: formatTime(via.departure.time),
+            platform: via.departure.platform,
+            delay: parseInt(via.departure.delay) / 60,
+            train: {
+              number: via.departure.vehicleinfo.shortname,
+              type: via.departure.vehicleinfo.type,
+              direction: via.departure.direction?.name || '',
+            }
+          },
+          waitTime: {
+            minutes: waitMinutes,
+            formatted: formattedWaitTime,
+          }
         });
       });
     }
@@ -107,6 +179,7 @@ export async function getConnections(
       },
       trains,
       transfers: parseInt(conn.vias?.number || "0"),
+      transferStops,
       occupancy: conn.departure.occupancy?.name,
     };
   });
