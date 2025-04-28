@@ -1,5 +1,6 @@
 import { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
-import registerStationTools from "./tools/stations.ts";
+import registerStationsTools from "./tools/stations.ts";
+import registerConnectionsTools from "./tools/connections.ts";
 
 export function getServer() {
   const server = new McpServer({
@@ -7,7 +8,8 @@ export function getServer() {
     version: "1.0.0",
   });
 
-  registerStationTools(server);
+  registerStationsTools(server);
+  registerConnectionsTools(server);
 
   return server;
 }

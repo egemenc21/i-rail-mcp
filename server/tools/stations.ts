@@ -7,7 +7,7 @@ import {
 } from "../services/stations.ts";
 import { Station } from "../interfaces/stations.ts";
 
-export default function registerStationTools(server: McpServer) {
+export default function registerStationsTools(server: McpServer) {
   // Get information about all stations
   server.tool("getStationsInfo", "Get information about all stations", {
     lang: z.string().length(2).describe("Two-letter lang code (e.g. en, fr)"),

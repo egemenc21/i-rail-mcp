@@ -11,7 +11,7 @@ interface CacheEntry {
 const stationCache = new Map<string, CacheEntry>();
 const CACHE_EXPIRY = 24 * 60 * 60 * 1000; // 24 hours in milliseconds
 
-export async function getStationInfo(lang: string) : Promise<StationResponse> {
+export async function getStationInfo(lang: string): Promise<StationResponse> {
   // Check if we have cached data that's not expired
   const now = Date.now();
   const cached = stationCache.get(lang);
@@ -36,7 +36,8 @@ export async function getStationInfoById(
   lang: string,
 ): Promise<Station | undefined> {
   const data = await getStationInfo(lang);
-  return data.station.find((station: Station) => station["@id"] == id) || data.station.find((station: Station) => station.id == id);
+  return data.station.find((station: Station) => station["@id"] == id) ||
+    data.station.find((station: Station) => station.id == id);
 }
 
 export async function getStationInfoByStationName(
@@ -54,4 +55,3 @@ export async function getStationInfoByStationName(
 
   return station;
 }
-

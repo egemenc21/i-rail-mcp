@@ -1,7 +1,8 @@
 {
   "tasks": {
     "dev": "deno run --watch main.ts",
-    "test": "deno test --env-file=.env -A tests/stations.ts",
+    "test-stations": "deno test --env-file=.env -A tests/stations.ts",
+    "test-connections": "deno test --env-file=.env -A tests/connections.ts",
     "start": "deno run --env-file=.env -A main.ts"
   },
   "imports": {
@@ -10,4 +11,5 @@
     "zod": "npm:zod@^3.24.3",
     "axios": "npm:axios@^1.9.0"
   }
+
 }
