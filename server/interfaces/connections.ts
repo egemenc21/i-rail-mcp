@@ -1,4 +1,6 @@
+import { PlatformInfo } from "./platform.ts";
 import { Station } from "./stations.ts";
+import { VehicleInfo } from "./vehicle.ts";
 
 export interface ConnectionsResponse {
   version: string;
@@ -52,20 +54,6 @@ export interface DepartureArrival {
   };
 }
 
-export interface VehicleInfo {
-  name: string;
-  shortname: string;
-  number: string;
-  type: string;
-  locationX: string;
-  locationY: string;
-  "@id": string;
-}
-
-export interface PlatformInfo {
-  name: string;
-  normal: string;
-}
 
 export interface Stop {
   id: string;
@@ -93,4 +81,67 @@ export interface Via {
   stationinfo: Station;
   vehicle: string;
   vehicleinfo: VehicleInfo;
+}
+
+// SIMPLE RESPONSE
+// Type definition for our cleaner response format
+export interface SimpleConnection {
+  id: string;
+  departure: {
+    station: string;
+    time: string;
+    formattedTime: string;
+    platform: string;
+    delay: number;
+    canceled: boolean;
+  };
+  arrival: {
+    station: string;
+    time: string;
+    formattedTime: string;
+    platform: string;
+    delay: number;
+    canceled: boolean;
+  };
+  duration: {
+    minutes: number;
+    formatted: string;
+  };
+  trains: {
+    number: string;
+    type: string;
+    direction: string;
+  }[];
+  transfers: number;
+  transferStops: TransferStop[];
+  occupancy?: string;
+}
+
+export interface TransferStop {
+  station: string;
+  arrival: {
+    time: string;
+    formattedTime: string;
+    platform: string;
+    delay: number;
+    train: {
+      number: string;
+      type: string;
+    }
+  };
+  departure: {
+    time: string;
+    formattedTime: string;
+    platform: string;
+    delay: number;
+    train: {
+      number: string;
+      type: string;
+      direction: string;
+    }
+  };
+  waitTime: {
+    minutes: number;
+    formatted: string;
+  };
 }

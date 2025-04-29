@@ -1,67 +1,6 @@
-import { Connection, ConnectionsResponse, Via } from "../interfaces/connections.ts";
+import { Connection, ConnectionsResponse, SimpleConnection, TransferStop, Via } from "../interfaces/connections.ts";
 import httpClient from "./httpClient.ts";
-
-// Type definition for our cleaner response format
-export interface SimpleConnection {
-  id: string;
-  from: {
-    station: string;
-    time: string;
-    formattedTime: string;
-    platform: string;
-    delay: number;
-    canceled: boolean;
-  };
-  to: {
-    station: string;
-    time: string;
-    formattedTime: string;
-    platform: string;
-    delay: number;
-    canceled: boolean;
-  };
-  duration: {
-    minutes: number;
-    formatted: string;
-  };
-  trains: {
-    number: string;
-    type: string;
-    direction: string;
-  }[];
-  transfers: number;
-  transferStops: TransferStop[];
-  occupancy?: string;
-}
-
-export interface TransferStop {
-  station: string;
-  arrival: {
-    time: string;
-    formattedTime: string;
-    platform: string;
-    delay: number;
-    train: {
-      number: string;
-      type: string;
-    }
-  };
-  departure: {
-    time: string;
-    formattedTime: string;
-    platform: string;
-    delay: number;
-    train: {
-      number: string;
-      type: string;
-      direction: string;
-    }
-  };
-  waitTime: {
-    minutes: number;
-    formatted: string;
-  };
-}
+import { formatTime } from "../helpers/time.ts";
 
 export async function getConnections(
   from: string,
@@ -157,7 +96,7 @@ export async function getConnections(
     
     return {
       id: conn.id,
-      from: {
+      departure: {
         station: conn.departure.station,
         time: conn.departure.time,
         formattedTime: formatTime(conn.departure.time),
@@ -165,7 +104,7 @@ export async function getConnections(
         delay: parseInt(conn.departure.delay) / 60, // convert to minutes
         canceled: conn.departure.canceled === "1",
       },
-      to: {
+      arrival: {
         station: conn.arrival.station,
         time: conn.arrival.time,
         formattedTime: formatTime(conn.arrival.time),
@@ -185,15 +124,4 @@ export async function getConnections(
   });
   
   return { connections: cleanConnections };
-}
-
-// Helper function to format Unix timestamp to readable time
-function formatTime(unixTime: string): string {
-  const date = new Date(parseInt(unixTime) * 1000);
-  
-  // Format as HH:MM
-  const hours = date.getHours().toString().padStart(2, '0');
-  const minutes = date.getMinutes().toString().padStart(2, '0');
-  
-  return `${hours}:${minutes}`;
 }
