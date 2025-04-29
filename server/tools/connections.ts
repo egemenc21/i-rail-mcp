@@ -1,7 +1,7 @@
-import { getConnections, SimpleConnection } from "../services/connections.ts";
+import { getConnections } from "../services/connections.ts";
+import { SimpleConnection } from "../interfaces/connections.ts";
 import { z } from "zod";
 import { McpServer } from "@modelcontextprotocol/sdk";
-import { Connection } from "../interfaces/connections.ts";
 
 export default function registerConnectionsTools(server: McpServer) {
   server.tool(

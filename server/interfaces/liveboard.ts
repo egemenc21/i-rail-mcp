@@ -3,21 +3,16 @@
  * Handles both departures and arrivals
  */
 
-import { VehicleInfo } from "./vehicle.ts";
+import { VehicleInfo } from "./vehicles.ts";
 import { PlatformInfo } from "./platform.ts";
-import { Station } from "./stations.ts";
-
-// Occupancy information interface
-export interface OccupancyInfo {
-  "@id": string;
-  name: string;
-}
+import { StationInfo } from "./stations.ts";
+import { OccupancyInfo } from "./occupancy.ts";
 
 // Common train stop interface (used for both departures and arrivals)
 export interface TrainStop {
   id: string;
   station: string;
-  stationinfo: Station;
+  stationinfo: StationInfo;
   time: string;
   delay: string;
   canceled: string;
@@ -48,7 +43,7 @@ export interface TrainDeparturesResponse {
   version: string;
   timestamp: string;
   station: string;
-  stationinfo: Station;
+  stationinfo: StationInfo;
   departures: Departures;
 }
 
@@ -57,7 +52,7 @@ export interface TrainArrivalsResponse {
   version: string;
   timestamp: string;
   station: string;
-  stationinfo: Station;
+  stationinfo: StationInfo;
   arrivals: Arrivals;
 }
 

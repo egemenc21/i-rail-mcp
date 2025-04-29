@@ -3,6 +3,8 @@
     "dev": "deno run --watch main.ts",
     "test-stations": "deno test --env-file=.env -A tests/stations.ts",
     "test-connections": "deno test --env-file=.env -A tests/connections.ts",
+    "test-liveboard": "deno test --env-file=.env -A tests/liveboard.ts",
+    "test-vehicles": "deno test --env-file=.env -A tests/vehicles.ts",
     "start": "deno run --env-file=.env -A main.ts"
   },
   "imports": {

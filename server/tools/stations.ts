@@ -5,7 +5,7 @@ import {
   getStationInfoById,
   getStationInfoByStationName,
 } from "../services/stations.ts";
-import { Station } from "../interfaces/stations.ts";
+import { StationInfo } from "../interfaces/stations.ts";
 
 export default function registerStationsTools(server: McpServer) {
   // Get information about all stations
@@ -14,7 +14,7 @@ export default function registerStationsTools(server: McpServer) {
   }, async ({ lang }: { lang: string }) => {
     const data = await getStationInfo(lang);
     return {
-      content: data.station.map((station: Station) => ({
+      content: data.station.map((station: StationInfo) => ({
         type: "text",
         text: JSON.stringify(station),
       })),

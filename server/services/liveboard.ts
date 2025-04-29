@@ -1,3 +1,4 @@
+import { TrainStationResponse } from "../interfaces/liveboard.ts";
 import httpClient from "./httpClient.ts";
 
 export async function getLiveboard(
@@ -5,13 +6,13 @@ export async function getLiveboard(
   stationName: string,
   date: string,
   time: string,
-  arrdep: string,
-  lang: string,
+  arrdep: string = "departure",
+  lang: string = "en",
 ) {
   const response = await httpClient
-    .get(
+    .get<TrainStationResponse>(
       `/liveboard/?station=${stationId}` +
-      `&station=${stationName}` +
+      `&station=${stationName.trim()}` +
       `&date=${date}` +
       `&time=${time}` +
       `&arrdep=${arrdep}` + // whether it's arrival or departure information

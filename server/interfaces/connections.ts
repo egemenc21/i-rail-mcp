@@ -1,6 +1,6 @@
 import { PlatformInfo } from "./platform.ts";
-import { Station } from "./stations.ts";
-import { VehicleInfo } from "./vehicle.ts";
+import { StationInfo } from "./stations.ts";
+import { VehicleInfo } from "./vehicles.ts";
 
 export interface ConnectionsResponse {
   version: string;
@@ -30,7 +30,7 @@ export interface Connection {
 export interface DepartureArrival {
   delay: string;
   station: string;
-  stationinfo: Station;
+  stationinfo: StationInfo;
   time: string;
   vehicle: string;
   vehicleinfo: VehicleInfo;
@@ -58,7 +58,7 @@ export interface DepartureArrival {
 export interface Stop {
   id: string;
   station: string;
-  stationinfo: Station;
+  stationinfo: StationInfo;
   scheduledArrivalTime: string;
   arrivalCanceled: string;
   arrived: string;
@@ -78,7 +78,7 @@ export interface Via {
   departure: DepartureArrival;
   timebetween: string;
   station: string;
-  stationinfo: Station;
+  stationinfo: StationInfo;
   vehicle: string;
   vehicleinfo: VehicleInfo;
 }

@@ -1,4 +1,4 @@
-import { Station, StationResponse } from "../interfaces/stations.ts";
+import { StationInfo, StationResponse } from "../interfaces/stations.ts";
 import httpClient from "./httpClient.ts";
 
 // In-memory cache
@@ -34,20 +34,20 @@ export async function getStationInfo(lang: string): Promise<StationResponse> {
 export async function getStationInfoById(
   id: string,
   lang: string,
-): Promise<Station | undefined> {
+): Promise<StationInfo | undefined> {
   const data = await getStationInfo(lang);
-  return data.station.find((station: Station) => station["@id"] == id) ||
-    data.station.find((station: Station) => station.id == id);
+  return data.station.find((station: StationInfo) => station["@id"] == id) ||
+    data.station.find((station: StationInfo) => station.id == id);
 }
 
 export async function getStationInfoByStationName(
   name: string,
   lang: string,
-): Promise<Station | undefined> {
+): Promise<StationInfo | undefined> {
   const data = await getStationInfo(lang);
   const station =
-    data.station.find((station: Station) => station.standardname == name) ||
-    data.station.find((station: Station) => station.name == name);
+    data.station.find((station: StationInfo) => station.standardname == name) ||
+    data.station.find((station: StationInfo) => station.name == name);
 
   if (!station) {
     throw new Error(`Station not found: ${name}`);

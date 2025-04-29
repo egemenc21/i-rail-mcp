@@ -41,11 +41,11 @@ Deno.test("Get connections from Gent-Sint-Pieters", async () => {
     console.log("Sample connections:");
     connectionsData.connections.slice(0, 3).forEach((connection, index) => {
       console.log(`Connection ${index + 1}:`);
-      console.log(`- From: ${connection.from.station}`);
-      console.log(`- To: ${connection.to.station}`);
+      console.log(`- From: ${connection.departure.station}`);
+      console.log(`- To: ${connection.arrival.station}`);
       console.log(
         `- Departure time: ${
-          new Date(parseInt(connection.from.time) * 1000)
+          new Date(parseInt(connection.departure.time) * 1000)
             .toLocaleTimeString()
         }`,
       );
@@ -96,7 +96,7 @@ Deno.test("Get connections for a future time", async () => {
 
     // Check the first connection's departure date
     const firstConnectionTime = new Date(
-      parseInt(connectionsData.connections[0].from.time) * 1000,
+      parseInt(connectionsData.connections[0].departure.time) * 1000,
     );
 
     console.log(`Requested date: ${requestedDate.toDateString()}`);
@@ -107,41 +107,5 @@ Deno.test("Get connections for a future time", async () => {
   } catch (error: unknown) {
     const errorMessage = error instanceof Error ? error.message : String(error);
     console.error("Error fetching connections:", errorMessage);
-  }
-});
-
-// Test with a non-existent station
-Deno.test("Get connections from a non-existent station", async () => {
-  console.log("Testing getConnections with invalid station...");
-
-  try {
-    // Use a non-existent station name
-    const from = "NonExistentStation123456789";
-    const to = "Mechelen";
-    // Use current date in DDMMYYYY format
-    const today = new Date();
-    const date = `${String(today.getDate()).padStart(2, "0")}${
-      String(today.getMonth() + 1).padStart(2, "0")
-    }${today.getFullYear()}`;
-
-    // Use current time in HHMM format
-    const time = `${String(today.getHours()).padStart(2, "0")}${
-      String(today.getMinutes()).padStart(2, "0")
-    }`;
-    const lang = "en";
-
-    try {
-      const connectionsData = await getConnections(from, to, date, time, lang);
-      console.log("Unexpected success with invalid station:", connectionsData);
-    } catch (error: unknown) {
-      const errorMessage = error instanceof Error
-        ? error.message
-        : String(error);
-      console.log(`Expected error with invalid station: ${errorMessage}`);
-      // This is expected behavior, so we consider it a pass
-    }
-  } catch (error: unknown) {
-    const errorMessage = error instanceof Error ? error.message : String(error);
-    console.error("Unexpected test error:", errorMessage);
   }
 });

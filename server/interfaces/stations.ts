@@ -1,7 +1,7 @@
 /**
  * Represents an individual railway station
  */
-export interface Station {
+export interface StationInfo {
   "@id": string;
   id: string;
   name: string;
@@ -16,7 +16,7 @@ export interface Station {
 export interface StationResponse {
   version: string;
   timestamp: string;
-  station: Station[];
+  station: StationInfo[];
 }
 
 // Example usage:

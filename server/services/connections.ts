@@ -7,21 +7,21 @@ export async function getConnections(
   to: string,
   date: string,
   time: string,
-  lang: string,
+  timesel: string = "departure",
+  lang: string = "en",
 ): Promise<{ connections: SimpleConnection[] }> {
   const endpoint = `/connections/` +
     `?from=${from}` +
     `&to=${to}` +
     `&date=${date}` +
     `&time=${time}` +
-    `&timesel=departure` +
+    `&timesel=${timesel}` +
     `&format=json` +
     `&lang=${lang}` +
     `&typeOfTransport=automatic` +
     `&alerts=false` +
     `&results=6`;
   
-  console.log(endpoint);
   const response = await httpClient.get<ConnectionsResponse>(endpoint);
   
   // Transform the complex response into a simpler format
