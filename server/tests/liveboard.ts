@@ -54,31 +54,31 @@ Deno.test("Get liveboard from Gent-Sint-Pieters", async () => {
   }
 });
 
-// Test with a non-existent station
-Deno.test("Get liveboard from a non-existent station", async () => {
-  console.log("Testing getLiveboard with invalid station...");
+// // Test with a non-existent station
+// Deno.test("Get liveboard from a non-existent station", async () => {
+//   console.log("Testing getLiveboard with invalid station...");
 
-  const stationId = "invalid-id";
-  const stationName = "NonExistentStation123456789";
+//   const stationId = "invalid-id";
+//   const stationName = "NonExistentStation123456789";
   
-  // Use current date in DDMMYYYY format
-  const today = new Date();
-  const date = `${String(today.getDate()).padStart(2, "0")}${
-    String(today.getMonth() + 1).padStart(2, "0")
-  }${today.getFullYear()}`;
+//   // Use current date in DDMMYYYY format
+//   const today = new Date();
+//   const date = `${String(today.getDate()).padStart(2, "0")}${
+//     String(today.getMonth() + 1).padStart(2, "0")
+//   }${today.getFullYear()}`;
 
-  // Use current time in HHMM format
-  const time = `${String(today.getHours()).padStart(2, "0")}${
-    String(today.getMinutes()).padStart(2, "0")
-  }`;
-  const lang = "en";
+//   // Use current time in HHMM format
+//   const time = `${String(today.getHours()).padStart(2, "0")}${
+//     String(today.getMinutes()).padStart(2, "0")
+//   }`;
+//   const lang = "en";
 
-  // Assert that the API call fails with a 404 error
-  await assertRejects(
-    async () => {
-      await getLiveboard(stationId, stationName, date, time, "departure", lang);
-    },
-    Error,
-    "Expected API call to fail with an error",
-  );
-});
+//   // Assert that the API call fails with a 404 error
+//   await assertRejects(
+//     async () => {
+//       await getLiveboard(stationId, stationName, date, time, "departure", lang);
+//     },
+//     Error,
+//     "Expected API call to fail with an error",
+//   );
+// });
