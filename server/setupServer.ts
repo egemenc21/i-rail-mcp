@@ -3,7 +3,7 @@ import registerStationsTools from "./tools/stations.ts";
 import registerConnectionsTools from "./tools/connections.ts";
 import registerLiveboardTools from "./tools/liveboard.ts";
 import registerVehicles from "./tools/vehicles.ts";
-
+import registerCompositionTools from "./tools/composition.ts";
 export function getServer() {
   const server = new McpServer({
     name: "i-rail-mcp-server",
@@ -14,6 +14,7 @@ export function getServer() {
   registerConnectionsTools(server);
   registerLiveboardTools(server);
   registerVehicles(server);
+  registerCompositionTools(server);
   
   return server;
 }

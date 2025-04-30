@@ -75,3 +75,46 @@ export interface TrainCompositionResponse {
   timestamp: string;
   composition: Composition;
 }
+
+// Simple train composition
+
+export enum Data {
+  empty = "",
+  all = "all",
+}
+
+// Simple composition interface
+export interface SimpleTrainComposition {
+  trainId: string;
+  journey: {
+    from: {
+      id: string;
+      name: string;
+    };
+    to: {
+      id: string;
+      name: string;
+    };
+  };
+  seating: {
+    firstClass: number;
+    secondClass: number;
+    total: number;
+  };
+  units: Array<{
+    number: number;
+    type: string;
+    length: number;
+    firstClassSeats: number;
+    secondClassSeats: number;
+    seatsLeftFirstClass: number;
+    seatsLeftSecondClass: number;
+    hasToilets: boolean;
+    hasPowerOutlets: boolean;
+    hasAirConditioning: boolean;
+    hasHeating: boolean;
+    hasBikeSection: boolean;
+    hasAccessibility: boolean;
+  }>;
+}
+

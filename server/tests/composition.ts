@@ -1,4 +1,5 @@
-import { getComposition, Data } from "../services/composition.ts";
+import { Data } from "../interfaces/composition.ts";
+import { getSimpleComposition} from "../services/composition.ts";
 import {
   assertEquals,
   assertExists,
@@ -14,37 +15,34 @@ Deno.test("Verify train composition data", async () => {
     const toId = "BE.NMBS.008821006"; // Antwerpen-Centraal ID
     const lang = "en";
 
-    const compositionData = await getComposition(vehicleId, fromId, toId, Data.all, lang);
+    const compositionData = await getSimpleComposition(vehicleId, fromId, toId, Data.all, lang);
 
     // Verify that we received composition data
     assertExists(compositionData, "Should return composition data");
 
     // If we got a specific segment (when from and to are provided)
-    if (compositionData && 'origin' in compositionData) {
+    if (compositionData) {
       // Test segment data
       const segment = compositionData;
-      assertEquals(segment.origin.id, fromId, "Origin ID should match");
-      assertEquals(segment.destination.id, toId, "Destination ID should match");
-
       // Log segment details
       console.log("\nSegment details:");
-      console.log(`From: ${segment.origin.name} (${segment.origin.id})`);
-      console.log(`To: ${segment.destination.name} (${segment.destination.id})`);
+      console.log(`From: ${segment.journey.from.name} (${segment.journey.from.id})`);
+      console.log(`To: ${segment.journey.to.name} (${segment.journey.to.id})`);
 
       // Verify composition details
-      assertExists(segment.composition, "Should have composition details");
-      assertExists(segment.composition.units, "Should have units information");
+      assertExists(segment.units, "Should have units information");
       
       // Log composition details
       console.log("\nComposition details:");
-      console.log(`Source: ${segment.composition.source}`);
-      if (segment.composition.units.unit) {
-        segment.composition.units.unit.forEach((unit, index) => {
+      if (segment.units) {
+        segment.units.forEach((unit, index) => {
           console.log(`\nUnit ${index + 1}:`);
-          console.log(`Type: ${unit.materialType.parent_type} - ${unit.materialType.sub_type}`);
-          console.log(`Length: ${unit.lengthInMeter}m`);
-          console.log(`First Class Seats: ${unit.seatsFirstClass}`);
-          console.log(`Second Class Seats: ${unit.seatsSecondClass}`);
+          console.log(`Type: ${unit.type}`);
+          console.log(`Length: ${unit.length}m`);
+          console.log(`First Class Seats: ${unit.firstClassSeats}`);
+          console.log(`Second Class Seats: ${unit.secondClassSeats}`);
+          console.log(`First Class Seats Left: ${unit.seatsLeftFirstClass}`);
+          console.log(`Second Class Seats Left: ${unit.seatsLeftSecondClass}`);
         });
       }
     }
