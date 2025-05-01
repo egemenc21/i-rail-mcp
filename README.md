@@ -17,6 +17,28 @@ This project implements an MCP server that provides AI assistants with tools to 
 - [Deno](https://deno.com/) v1.40.0 or higher
 - API access to Belgian railway data which has public API [iRail](https://docs.irail.be/)
 
+### Installing Deno
+
+You can install Deno directly:
+
+```bash
+# Using curl (macOS/Linux)
+curl -fsSL https://deno.land/x/install/install.sh | sh
+
+# Using PowerShell (Windows)
+irm https://deno.land/install.ps1 | iex
+```
+
+Or install using npm:
+
+```bash
+# Install deno using npm
+npm install -g deno
+
+# Verify installation
+deno --version
+```
+
 ## Setup
 
 1. Clone the repository:
@@ -28,7 +50,10 @@ This project implements an MCP server that provides AI assistants with tools to 
 2. Create a `.env` file in the `server` directory with your API credentials:
    ```
    API_KEY=your_api_key_here
+   USER_AGENT="iRail-MCP-Agent/1.0.0 (www.yourwebsite.com;your.email@example.com)"
    ```
+   
+   > **Note:** The USER_AGENT is required by the iRail API to identify who is making the requests. Please provide your credentials and email.
 
 3. Install dependencies (handled by Deno automatically when running the server) or use in server directory:
     ```

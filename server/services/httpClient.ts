@@ -1,12 +1,12 @@
 import axios from "axios";
 
 const API_URL = Deno.env.get("API_URL");
+const USER_AGENT = Deno.env.get("USER_AGENT");
 
 const httpClient = axios.create({
   baseURL: API_URL,
   headers: {
-    "User-Agent":
-      "iRail-MCP-Agent/1.0.0 (www.egemenc.com;egemenc2101@gmail.com)",
+    "User-Agent": USER_AGENT,
     Accept: "application/json",
     Connection: "keep-alive",
     "Content-Type": "application/json",

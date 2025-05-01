@@ -3,20 +3,19 @@ import {
   getStationInfoById,
   getStationInfoByStationName,
 } from "../services/stations.ts";
-import { Station } from "../interfaces/stations.ts";
+import { StationInfo  } from "../interfaces/stations.ts";
 import { assertEquals } from "https://deno.land/std@0.208.0/assert/mod.ts";
+import httpClient from "../services/httpClient.ts";
 
-// Test to get all stations and filter for Belgian ones
-Deno.test("Get all stations and find Belgian ones", async () => {
-  console.log("Testing getStationInfo to find Belgian stations...");
+// Test to get all stations 
+Deno.test("Get all stations", async () => {
+  console.log("Testing getStationInfo...");
 
   try {
     const stationData = await getStationInfo("en");
     console.log(`Total stations found: ${stationData.station.length}`);
 
-    // A basic heuristic to identify Belgian stations - this is an example approach
-    // Belgian stations often have BE in the ID or have specific naming patterns
-    const stations = stationData.station.filter((station: Station) =>
+    const stations = stationData.station.filter((station: StationInfo) =>
       station.name.includes("Bruxelles") ||
       station.name.includes("Brussel") ||
       station.name.includes("Liège") ||
@@ -27,12 +26,25 @@ Deno.test("Get all stations and find Belgian ones", async () => {
 
     console.log(`Identified stations: ${stations.length}`);
     console.log("Sample stations:");
-    stations.slice(0, 5).forEach((station: Station) => {
+    stations.slice(0, 5).forEach((station: StationInfo) => {
       console.log(`- ${station.name} (ID: ${station["@id"]})`);
     });
   } catch (error: unknown) {
     const errorMessage = error instanceof Error ? error.message : String(error);
     console.error("Error fetching stations:", errorMessage);
+  } finally {
+    // Clean up TCP connections by closing the axios http agent
+    // This ensures all TCP connections are properly closed
+    if (httpClient.defaults.httpAgent) {
+      httpClient.defaults.httpAgent.destroy();
+    }
+    if (httpClient.defaults.httpsAgent) {
+      httpClient.defaults.httpsAgent.destroy();
+    }
+    
+    // For Deno's compatibility with axios, we need to explicitly close any open connections
+    // Wait a short time to allow any pending operations to complete
+    await new Promise((resolve) => setTimeout(resolve, 100));
   }
 });
 
@@ -58,6 +70,19 @@ Deno.test("Get station by ID", async () => {
   } catch (error: unknown) {
     const errorMessage = error instanceof Error ? error.message : String(error);
     console.error("Error fetching station by ID:", errorMessage);
+  } finally {
+    // Clean up TCP connections by closing the axios http agent
+    // This ensures all TCP connections are properly closed
+    if (httpClient.defaults.httpAgent) {
+      httpClient.defaults.httpAgent.destroy();
+    }
+    if (httpClient.defaults.httpsAgent) {
+      httpClient.defaults.httpsAgent.destroy();
+    }
+    
+    // For Deno's compatibility with axios, we need to explicitly close any open connections
+    // Wait a short time to allow any pending operations to complete
+    await new Promise((resolve) => setTimeout(resolve, 100));
   }
 });
 
@@ -89,5 +114,18 @@ Deno.test("Get station by name", async () => {
   } catch (error: unknown) {
     const errorMessage = error instanceof Error ? error.message : String(error);
     console.error("Error fetching station by name:", errorMessage);
+  } finally {
+    // Clean up TCP connections by closing the axios http agent
+    // This ensures all TCP connections are properly closed
+    if (httpClient.defaults.httpAgent) {
+      httpClient.defaults.httpAgent.destroy();
+    }
+    if (httpClient.defaults.httpsAgent) {
+      httpClient.defaults.httpsAgent.destroy();
+    }
+    
+    // For Deno's compatibility with axios, we need to explicitly close any open connections
+    // Wait a short time to allow any pending operations to complete
+    await new Promise((resolve) => setTimeout(resolve, 100));
   }
 });

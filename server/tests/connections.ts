@@ -3,6 +3,7 @@ import {
   assertEquals,
   assertExists,
 } from "https://deno.land/std@0.208.0/assert/mod.ts";
+import httpClient from "../services/httpClient.ts";
 
 // Test to get connections from a valid station
 Deno.test("Get connections from Gent-Sint-Pieters", async () => {
@@ -54,6 +55,19 @@ Deno.test("Get connections from Gent-Sint-Pieters", async () => {
   } catch (error: unknown) {
     const errorMessage = error instanceof Error ? error.message : String(error);
     console.error("Error fetching connections:", errorMessage);
+  } finally {
+    // Clean up TCP connections by closing the axios http agent
+    // This ensures all TCP connections are properly closed
+    if (httpClient.defaults.httpAgent) {
+      httpClient.defaults.httpAgent.destroy();
+    }
+    if (httpClient.defaults.httpsAgent) {
+      httpClient.defaults.httpsAgent.destroy();
+    }
+    
+    // For Deno's compatibility with axios, we need to explicitly close any open connections
+    // Wait a short time to allow any pending operations to complete
+    await new Promise((resolve) => setTimeout(resolve, 100));
   }
 });
 
@@ -107,5 +121,18 @@ Deno.test("Get connections for a future time", async () => {
   } catch (error: unknown) {
     const errorMessage = error instanceof Error ? error.message : String(error);
     console.error("Error fetching connections:", errorMessage);
+  } finally {
+    // Clean up TCP connections by closing the axios http agent
+    // This ensures all TCP connections are properly closed
+    if (httpClient.defaults.httpAgent) {
+      httpClient.defaults.httpAgent.destroy();
+    }
+    if (httpClient.defaults.httpsAgent) {
+      httpClient.defaults.httpsAgent.destroy();
+    }
+    
+    // For Deno's compatibility with axios, we need to explicitly close any open connections
+    // Wait a short time to allow any pending operations to complete
+    await new Promise((resolve) => setTimeout(resolve, 100));
   }
 });
