@@ -1,0 +1,165 @@
+# i-rail-mcp
+
+A Model Context Protocol (MCP) server for accessing Belgian railway information, providing real-time data on train schedules, stations, connections, and more.
+
+## Overview
+
+This project implements an MCP server that provides AI assistants with tools to access Belgian railway data. It allows users to:
+
+- Find information about train stations
+- Check train connections between stations
+- View liveboards (arrivals/departures at stations)
+- Get vehicle/train information and routes
+- Access train composition details (seating, facilities, etc.)
+
+## Prerequisites
+
+- [Deno](https://deno.com/) v1.40.0 or higher
+- API access to Belgian railway data which has public API [iRail](https://docs.irail.be/)
+
+## Setup
+
+1. Clone the repository:
+   ```bash
+   git clone https://github.com/egemenc21/i-rail-mcp.git
+   cd i-rail-mcp
+   ```
+
+2. Create a `.env` file in the `server` directory with your API credentials:
+   ```
+   API_KEY=your_api_key_here
+   ```
+
+3. Install dependencies (handled by Deno automatically when running the server) or use in server directory:
+    ```
+    deno install
+    ```
+
+
+## Running the Server
+
+Navigate to the server directory and run:
+
+```bash
+cd server
+deno task start
+```
+
+For development with auto-reload:
+
+```bash
+deno task dev
+```
+
+## Testing
+
+The project includes test cases for each module:
+
+```bash
+deno task test-stations    # Test station-related functionality
+deno task test-connections # Test connection-related functionality
+deno task test-liveboard   # Test liveboard functionality
+deno task test-vehicles    # Test vehicle information functionality
+deno task test-composition # Test train composition functionality
+```
+
+## Examples
+
+### Finding Train Connections
+
+You can use this MCP server to find train connections between stations with details about journey duration, transfers, and more.
+
+Example query:
+```
+Find trains from Gent-Sint-Pieters to Antwerp-Central on May 2nd, 2025, around 2 PM
+```
+
+Response:
+```json
+{
+  "id": "1",
+  "departure": {
+    "station": "Ghent-Sint-Pieters",
+    "time": "1746185220",
+    "formattedTime": "14:27",
+    "platform": "2",
+    "delay": 0,
+    "canceled": false
+  },
+  "arrival": {
+    "station": "Antwerp-Central",
+    "time": "1746188580",
+    "formattedTime": "15:23",
+    "platform": "2",
+    "delay": 0,
+    "canceled": false
+  },
+  "duration": {
+    "minutes": 56,
+    "formatted": "56min"
+  },
+  "trains": [
+    {
+      "number": "IC 734",
+      "type": "IC",
+      "direction": "Antwerp-Central"
+    }
+  ],
+  "transfers": 0,
+  "transferStops": [],
+  "occupancy": "low"
+}
+```
+
+### Getting Train Composition
+
+You can retrieve detailed information about a specific train, including:
+- Available seats
+- Bike sections
+- Toilets and other facilities
+
+Example query:
+```
+Get composition for train IC734 from Gent-Sint-Pieters to Antwerp-Central
+```
+
+Response includes details about seating capacity, available facilities, and more.
+
+### Station Information
+
+Look up information about train stations, including their identifiers and geographic coordinates.
+
+Example query:
+```
+Get information about Gent-Sint-Pieters station
+```
+
+Response:
+```json
+{
+  "@id": "http://irail.be/stations/NMBS/008892007",
+  "id": "BE.NMBS.008892007",
+  "name": "Ghent-Sint-Pieters",
+  "locationX": "3.710675",
+  "locationY": "51.035896",
+  "standardname": "Gent-Sint-Pieters"
+}
+```
+
+## Architecture
+
+This project is built using:
+- Deno runtime
+- Model Context Protocol (MCP) for AI tool integration
+- TypeScript
+- Zod for schema validation
+
+The server exposes several tools that can be invoked by AI assistants through the MCP protocol to retrieve railway information.
+
+## Contributing
+
+Contributions are welcome! Please feel free to submit a Pull Request.
+
+## License
+
+[MIT License](LICENSE) 

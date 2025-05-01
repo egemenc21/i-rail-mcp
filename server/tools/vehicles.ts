@@ -8,7 +8,7 @@ export default function registerVehicles(server: McpServer) {
     "getVehicleInfoByVehicleId",
     "Get vehicle info by vehicle id",
     {
-      vehicleId: z.string().describe("The vehicle id, if name is provided then BE.NMBS.{name} is the vehicle id"),
+      vehicleId: z.string().describe("The vehicle id, either name or id (without spaces), example: IC734 or BE.NMBS.IC734"),
       date: z.string().describe("The date in format DDMMYYYY"),
       lang: z.string().describe("The language of the response, ex: en, fr"),
     },

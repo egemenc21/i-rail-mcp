@@ -14,6 +14,9 @@ export async function getSimpleComposition(
 ): Promise<SimpleTrainComposition | null> {
   console.log(`Getting simple composition for ${vehicleId} from ${from} to ${to}`);
   
+  // just in case map vehicleId to a valid vehicle id, remove blank spaces
+  vehicleId = vehicleId.trim();
+
   const response = await httpClient.get<TrainCompositionResponse>(
     `/composition/?id=${vehicleId}&data=${data}&lang=${lang}&format=json`,
   );
@@ -21,7 +24,7 @@ export async function getSimpleComposition(
   const composition = response.data.composition;
   const segments = composition.segments;
   const segment = segments.segment.find(
-    (segment) => segment.origin.id === from && segment.destination.id === to,
+    (segment) => segment.origin.id === from || segment.destination.id === to,
   );
   
   if (!segment) {
@@ -97,7 +100,7 @@ export async function getComposition(
   const composition = response.data.composition;
   const segments = composition.segments;
   const segment = segments.segment.find(
-    (segment) => segment.origin.id === from && segment.destination.id === to,
+    (segment) => segment.origin.id === from || segment.destination.id === to,
   );
   
   return segment;

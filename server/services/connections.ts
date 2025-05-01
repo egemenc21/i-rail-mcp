@@ -1,6 +1,6 @@
 import { Connection, ConnectionsResponse, SimpleConnection, TransferStop, Via } from "../interfaces/connections.ts";
 import httpClient from "./httpClient.ts";
-import { formatTime } from "../helpers/time.ts";
+import { formatTime, reduceTime } from "../helpers/time.ts";
 
 export async function getConnections(
   from: string,
@@ -10,11 +10,14 @@ export async function getConnections(
   timesel: string = "departure",
   lang: string = "en",
 ): Promise<{ connections: SimpleConnection[] }> {
+  // map time to 1h earlier since the api shows the time 1 hour later than the requested time
+  const formattedTime = reduceTime(time, 1);
+
   const endpoint = `/connections/` +
     `?from=${from}` +
     `&to=${to}` +
     `&date=${date}` +
-    `&time=${time}` +
+    `&time=${formattedTime}` +
     `&timesel=${timesel}` +
     `&format=json` +
     `&lang=${lang}` +

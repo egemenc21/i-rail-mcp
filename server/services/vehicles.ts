@@ -9,8 +9,8 @@ import { formatTime } from "../helpers/time.ts";
 /**
  * Fetches detailed information about a specific vehicle (train) by its ID
  *
- * @param vehicleId - The unique identifier of the vehicle to look up
- * @param date - The date for which to get the vehicle information (YYYYMMDD format)
+ * @param vehicleId - The unique identifier of the vehicle to look up, either name or id
+ * @param date - The date for which to get the vehicle information (format DDMMYYYY)
  * @param lang - The language code for the response (defaults to "en")
  * @returns Promise containing the vehicle information including stops and schedule
  */

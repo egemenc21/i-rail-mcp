@@ -10,7 +10,7 @@ Deno.test("Verify train composition data", async () => {
   console.log("Testing train composition data...");
 
   try {
-    const vehicleId = "IC734"; // Example vehicle ID
+    const vehicleId = "IC735"; // Example vehicle ID
     const fromId = "BE.NMBS.008892007"; // Gent-Sint-Pieters ID
     const toId = "BE.NMBS.008821006"; // Antwerpen-Centraal ID
     const lang = "en";
