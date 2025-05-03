@@ -76,6 +76,38 @@ For development with auto-reload:
 deno task dev
 ```
 
+## MCP Client Integration
+
+This MCP server can be integrated with any MCP-compatible client that supports tools functionality. Popular clients include [Cursor](https://cursor.com), [Claude Desktop App](https://claude.ai/download), VS Code with GitHub Copilot, and many others listed on the [MCP clients page](https://modelcontextprotocol.io/clients).
+
+### Client Configuration
+
+To configure an MCP client to use this server, add the following configuration to your client's MCP settings:
+
+```json
+{
+  "mcpServers": {
+    "i-rail-mcp-server": {
+      "command": "deno",
+      "args": ["run", "--env-file", "-A", "/path/to/i-rail-mcp/server/main.ts"],
+      "env": {
+        "API_URL": "https://api.irail.be"
+      }
+    }
+  }
+}
+```
+
+Replace `/path/to/i-rail-mcp` with the actual path where you've cloned this repository.
+
+### Integration Examples:
+
+1. **Cursor**: Add the configuration to `~/.cursor/mcp.json`
+2. **Claude Desktop App**: Configure in the MCP settings panel
+3. **VS Code**: Add to your settings.json under the Copilot configuration
+
+Once configured, the railway information tools will be available to your AI assistant, allowing it to fetch and display real-time train information in response to your queries.
+
 ## Testing
 
 The project includes test cases for each module:
