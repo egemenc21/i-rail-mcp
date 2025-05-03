@@ -1,6 +1,6 @@
 import { Connection, ConnectionsResponse, SimpleConnection, TransferStop, Via } from "../interfaces/connections.ts";
 import httpClient from "./httpClient.ts";
-import { formatTime } from "../helpers/time.ts";
+import { formatTime, reduceTime } from "../helpers/time.ts";
 
 export async function getConnections(
   from: string,

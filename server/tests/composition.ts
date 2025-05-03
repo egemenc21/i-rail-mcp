@@ -14,9 +14,11 @@ Deno.test("Verify train composition data", async () => {
     const vehicleId = "IC735"; // Example vehicle ID
     const fromId = "BE.NMBS.008892007"; // Gent-Sint-Pieters ID
     const toId = "BE.NMBS.008821006"; // Antwerpen-Centraal ID
+    const date = new Date().toLocaleDateString('en-GB').split('/').join('');
+    
     const lang = "en";
 
-    const compositionData = await getSimpleComposition(vehicleId, fromId, toId, Data.all, lang);
+    const compositionData = await getSimpleComposition(vehicleId, fromId, toId, date, Data.all, lang);
 
     // Verify that we received composition data
     assertExists(compositionData, "Should return composition data");

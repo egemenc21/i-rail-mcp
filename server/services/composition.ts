@@ -1,6 +1,7 @@
 import { parseValue } from "../helpers/value.ts";
 import { Data, SimpleTrainComposition, TrainCompositionResponse, TrainSegment } from "../interfaces/composition.ts";
 import httpClient from "./httpClient.ts";
+import { getVehicleInfoByVehicleId } from "./vehicles.ts";
 
 /**
  * Retrieve train composition information in a simplified format
@@ -9,6 +10,7 @@ export async function getSimpleComposition(
   vehicleId: string,
   from: string,
   to: string,
+  date: string,
   data: Data = Data.all,
   lang: string = "en",
 ): Promise<SimpleTrainComposition | null> {
@@ -20,12 +22,28 @@ export async function getSimpleComposition(
   const response = await httpClient.get<TrainCompositionResponse>(
     `/composition/?id=${vehicleId}&data=${data}&lang=${lang}&format=json`,
   );
+
+  const vehicleInfo = await getVehicleInfoByVehicleId(vehicleId, date, lang);
+  const journey = vehicleInfo.journey;
   
   const composition = response.data.composition;
   const segments = composition.segments;
-  const segment = segments.segment.find(
+  
+  // First try direct match with provided from/to
+  let segment = segments.segment.find(
     (segment) => segment.origin.id === from || segment.destination.id === to,
   );
+  
+  // If no direct match is found, try to match with any stop in the journey
+  if (!segment && journey && journey.length > 0) {
+    // Get all station IDs from the journey
+    const stationIds = journey.map(stop => stop.id);
+    
+    // Find a segment where any stop in the journey matches origin or destination
+    segment = segments.segment.find(segment => 
+      stationIds.includes(segment.origin.id) || stationIds.includes(segment.destination.id)
+    );
+  }
   
   if (!segment) {
     return null;
